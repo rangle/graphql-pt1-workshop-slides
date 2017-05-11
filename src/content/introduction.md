@@ -151,10 +151,9 @@ query {
 # Arguments
 ### Exercise
 
-Find the gravity of Luke Skywalker's homeworld
+1. Find the gravity of Luke Skywalker's homeworld
 
-When listing all species with a page size of 3,
-what are the species on page 2?
+2. When listing all species with a page size of 3, what are the names of the species on page 2?
 
 ---
 
@@ -249,6 +248,39 @@ Then change the query to apply @include or @skip on person (edge)
 - Write a query call getLuke with an required parameter `$withDetails`
 - Fetch the details (birthYear, eyeColor, gender, and homeworld name) for Luke Skywalker
 - when `$withDetails` is false the query should only include his name
+
+Notes:
+
+query getLuke($withDetails:Boolean!) {
+  LukeSkywalker: person(id: "cGVvcGxlOjE=") {
+    name @skip(if:$withDetails)
+    birthYear @include(if:$withDetails)
+    eyeColor @include(if:$withDetails)
+    gender @include(if:$withDetails)
+    homeworld @include(if:$withDetails){
+      name
+    }
+  }
+}
+
+OR
+
+query getLuke($withDetails:Boolean!) {
+  LukeSkywalker: person(id: "cGVvcGxlOjE=") @include(if:$withDetails) {
+    birthYear
+    eyeColor
+    gender
+    homeworld
+      name
+    }
+  }
+  LukeSkywalker: person(id: "cGVvcGxlOjE=") @skip(if:$withDetails) {
+    name
+  }
+}
+
+Arguments:
+{ "withDetails": true }
 
 ---
 
